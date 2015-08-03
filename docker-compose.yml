@@ -1,0 +1,26 @@
+sqsstatsd:
+  image: christianbladescb/sqs-statsd
+  links: 
+    - statsd
+  environment: 
+    - STATSD_HOST=statsd:8125
+  env_file: .env
+  command: -v
+statsd:
+  image: christianbladescb/statsd-influxdb
+  links:
+    - influxdb
+  environment:
+    - INFLUXDB_HOST=influxdb
+    - INFLUXDB_VERSION=0.9
+    - INFLUXDB_DATABASE=compose
+influxdb:
+  image: tutum/influxdb
+  environment:
+    - PRE_CREATE_DB=compose
+grafana:
+  image: grafana/grafana
+  ports:
+    - 3000:3000
+  links: 
+    - influxdb
